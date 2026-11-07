@@ -1,0 +1,11 @@
+{
+ "_": "Times in seconds on the chosen take. cut_in/cut_out: the narrator's version of the character's line. hold_at/hold: silence added at a reveal (0 for none). treatment: chosen robot version.",
+ "cut_in": 26.5,
+ "cut_out": 28.86,
+ "context_in": 21.8,
+ "context_out": 32.0,
+ "gap": 0.12,
+ "hold_at": 56.56,
+ "hold": 1.6,
+ "treatment": 2
+}
