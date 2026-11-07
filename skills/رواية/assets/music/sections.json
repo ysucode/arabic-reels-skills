@@ -1,0 +1,19 @@
+{
+ "sections": [
+  {"ms": 4500, "styles": ["tense quiet pulse", "single low heartbeat", "cold", "one soft impact near the end"], "avoid": ["melody", "full drums", "loud"]},
+  {"ms": 7900, "styles": ["very quiet", "sparse glass ticks", "lots of space", "almost silent", "still"], "avoid": ["drums", "bass", "melody", "loud"]},
+  {"ms": 6500, "styles": ["slow steady build", "pulse returns", "rising unease", "quiet to moderate"], "avoid": ["heavy drums", "loud", "melody"]},
+  {"ms": 3000, "styles": ["fast riser", "huge rushing swell", "ends in sudden dark drop"], "avoid": ["calm", "steady level"]},
+  {"ms": 7900, "styles": ["dark low drone", "tense restrained pulse", "small clicks", "quiet under voice", "ominous"], "avoid": ["big drums", "melody", "loud"]},
+  {"ms": 11000, "styles": ["steadily accelerating", "layers adding", "rising tension", "moderate to loud", "driving rhythm"], "avoid": ["calm", "sparse"]},
+  {"ms": 7500, "styles": ["climax", "loudest moment of the piece", "heavy sub bass", "powerful percussion", "relentless"], "avoid": ["quiet", "sparse", "restrained"]},
+  {"ms": 6100, "styles": ["energy drains away", "layers falling off", "sustained low tone", "moderate to quiet"], "avoid": ["big drums", "loud"]},
+  {"ms": 4600, "styles": ["near silence", "one faint high tone", "empty", "held breath", "extremely quiet"], "avoid": ["drums", "bass", "melody", "rhythm", "loud"]},
+  {"ms": 3000, "styles": ["single low heartbeat returns", "same cold quiet pulse as the opening", "does not resolve", "no ending"], "avoid": ["final cadence", "fade out", "melody", "loud"]}
+ ],
+ "versions": {
+  "v1": {"styles": ["dark cinematic electronic", "suspense underscore", "analog synth bass", "metallic textures"], "seed": 5101},
+  "v2": {"styles": ["hybrid orchestral underscore", "low strings with electronic pulses", "deep taiko-like percussion", "suspense"], "seed": 5202}
+ },
+ "bpm": 96
+}
