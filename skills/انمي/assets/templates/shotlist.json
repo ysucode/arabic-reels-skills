@@ -1,0 +1,25 @@
+{
+  "title": "مثال",
+  "duration": 60,
+  "voice": "voice/voice.wav",
+  "music": "music/v1.mp3",
+  "music_db": -14,
+  "shots": [
+    {"id": "s01", "kind": "seedance", "start": 0, "dur": 12, "camera": "slow dolly in",
+     "beats": ["0-4: الشخصية واقفة وتتنفس", "4-8: تلتفت للأداة", "8-12: الأداة تضيء ووجهها ينصدم"],
+     "keyframe": "keyframes/s01.png", "end_frame": null, "clip": "clips/s01.mp4", "media_start": 0,
+     "vo": "الهوك هنا", "text": [{"say": "سطر الهوك", "t": 0.3, "dur": 2.7, "x": 540, "y": 420, "size": 72}],
+     "sfx": [], "note": "الهوك",
+     "svg": "<rect x='0' y='1300' width='1080' height='620' fill='#3b4a5a'/><circle cx='540' cy='760' r='110' fill='#f2c9a0'/><rect x='430' y='870' width='220' height='430' rx='60' fill='#e8742c'/><path d='M540 1700 L540 1500 M500 1540 L540 1500 L580 1540' stroke='#fff' stroke-width='14' fill='none'/>"},
+    {"id": "s02", "kind": "panel", "start": 12, "dur": 6, "image": "panels/s02.png", "move": "push-in", "vo": "", "text": [], "sfx": [], "svg": ""},
+    {"id": "s03", "kind": "panel", "start": 18, "dur": 6, "image": "panels/s03.png", "move": "pan-left", "vo": "", "text": [], "sfx": [], "svg": ""},
+    {"id": "s04", "kind": "panel", "start": 24, "dur": 6, "image": "panels/s04.png", "move": "drift-up", "vo": "", "text": [], "sfx": [], "svg": ""},
+    {"id": "s05", "kind": "seedance", "start": 30, "dur": 12, "camera": "orbit left",
+     "beats": ["0-4: ...", "4-8: ...", "8-12: ..."], "keyframe": "keyframes/s05.png", "end_frame": null,
+     "clip": "clips/s05.mp4", "media_start": 0, "vo": "الذروة", "text": [], "sfx": [], "svg": ""},
+    {"id": "s06", "kind": "panel", "start": 42, "dur": 6, "image": "panels/s06.png", "move": "pull-out", "vo": "", "text": [], "sfx": [], "svg": ""},
+    {"id": "s07", "kind": "panel", "start": 48, "dur": 6, "image": "panels/s07.png", "move": "still", "vo": "", "text": [], "sfx": [], "svg": ""},
+    {"id": "s08", "kind": "card", "start": 54, "dur": 6, "bg": "#14161c", "vo": "",
+     "text": [{"say": "اكتب الكلمة بالتعليقات", "t": 0.3, "dur": 5.5, "x": 540, "y": 900, "size": 52}], "sfx": [], "svg": ""}
+  ]
+}
