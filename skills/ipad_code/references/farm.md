@@ -13,6 +13,7 @@
 الجلسات ما بينها مجلد مشترك، فالمشهد يوصلها عن طريق git. استخدم فرع orphan فيه ثلاث ملفات بس:
 
 ```bash
+python3 $SK/scripts/farm.py precheck --blend $P/scene.blend   # GitHub يرفض أي ملف فوق 100 ميجا
 cd <المستودع>
 git worktree add --detach /tmp/job && cd /tmp/job
 git checkout --orphan render-job
@@ -46,9 +47,11 @@ create_session(
   source_revision= "render-job",
   outcome_branch = "render-out-wNN",      # يعطي الجلسة صلاحية الرفع على هذا الفرع
   tags           = ["<project>-render"],
-  prompt         = <ناتج: python3 farm.py prompt --worker NN --list "<إطاراته>">
+  prompt         = <ناتج: python3 farm.py prompt --worker NN --list "<إطاراته>" --samples <قيمة الرندر النهائي>>
 )
 ```
+
+- `--samples` إجباري. ملف المشهد ممكن يكون محفوظ بقيمة أعلى (مثال الترانزستور محفوظ بـ 96 والرندر النهائي 28)، وبدونها الأجهزة تبطأ وإطاراتها تختلف عن الرندر المحلي.
 
 - أرسل كل الجلسات في رد واحد (استدعاءات متوازية).
 - **لا تحط `permission_mode: plan`**، لأن الجلسة بتنتظر موافقة ما أحد بيعطيها.

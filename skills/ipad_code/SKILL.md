@@ -1,6 +1,6 @@
 ---
 name: ipad_code
-description: "اشتغل من الآيباد كأن عندك كمبيوتر قوي: رندر Blender بـ Cycles، ونصوص عربية على الفيديو، وتصميم صوت، وتجميع بـ ffmpeg، ومزرعة رندر من جلسات سحابية متوازية، كلها داخل جلسات Claude Code السحابية بدون PC. استخدمها كلما قال المستخدم ipad_code أو /ipad_code، أو قال إنه على آيباد أو جوال أو ما عنده كمبيوتر، أو طلب مقطع Blender أو رندر ثقيل أو أنيميشن ثلاثي الأبعاد أو تسريع الرندر بأجهزة كثيرة، حتى لو ما ذكر اسم السكل. Use for any heavy creative/compute job (3D render, video, audio) run from an iPad through Claude Code cloud sessions."
+description: "اشتغل من الآيباد كأن عندك كمبيوتر قوي: موشن جرافك بالكود في دقايق، ورندر Blender بـ Cycles، ونصوص عربية على الفيديو، وتصميم صوت، وتجميع بـ ffmpeg، ومزرعة رندر من جلسات سحابية متوازية، كلها داخل جلسات Claude Code السحابية بدون PC. استخدمها كلما قال المستخدم ipad_code أو /ipad_code، أو قال إنه على آيباد أو جوال أو ما عنده كمبيوتر، أو طلب موشن جرافك أو مقطع Blender أو رندر ثقيل أو أنيميشن ثلاثي الأبعاد أو تسريع الرندر بأجهزة كثيرة، حتى لو ما ذكر اسم السكل. Use for any heavy creative/compute job (3D render, video, audio) run from an iPad through Claude Code cloud sessions."
 ---
 
 # ipad_code
@@ -12,21 +12,30 @@ description: "اشتغل من الآيباد كأن عندك كمبيوتر قو
 `$SK` في هذا الملف يعني مجلد السكل (المجلد اللي فيه هذا الملف). أول شي حدده:
 
 ```bash
-SK=$(dirname "$(ls -d ~/.claude/skills/ipad_code/SKILL.md .claude/skills/ipad_code/SKILL.md 2>/dev/null | head -1)")
+SKILL_MD=$(ls -d ~/.claude/skills/ipad_code/SKILL.md .claude/skills/ipad_code/SKILL.md 2>/dev/null | head -1)
+[ -n "$SKILL_MD" ] || echo "ipad_code is not installed: follow START.md"
+SK=$(dirname "$SKILL_MD")
 ```
 
-## 0. التجهيز لأول مرة (على الآيباد)
+## 0. قبل أي شيء
 
-اشرح هذي للمستخدم إذا كانت أول مرة له، خطوة وحدة كل مرة:
+اقرأ `.claude/ipad_code.json`.
 
-1. يفتح Claude Code من تطبيق Claude أو من `claude.ai/code` في Safari، ويربط حسابه في GitHub لما يطلبه.
-2. يسوي مستودع في GitHub من Safari (ولو فاضي فيه README بس). الجلسات السحابية تشتغل على مستودع، والمزرعة تنقل الإطارات عن طريقه.
-3. **تركيب السكل:** ما فيه `~/.claude` دائم على الآيباد، فالسكل لازم يكون داخل المستودع. اطلب من Claude في جلسة على مستودعه: «انسخ مجلد `skills/ipad_code` من `ysucode/arabic-reels-skills` إلى `.claude/skills/ipad_code` في هذا المستودع وارفعه». بعدها كل جلسة جديدة على المستودع تشوف السكل.
-4. يبدأ جلسة جديدة على المستودع ويطلب اللي يبيه.
+- **موجود:** اتبع مستوى المستخدم اللي فيه (`level`: `new` أو `some` أو `tech`، و`guidance`: `explain` أو `results`). الجدول في [START.md](START.md) يوضح وش يعني كل مستوى. لا تعيد السؤال.
+- **مو موجود:** المستخدم جديد. نفذ [START.md](START.md) من أوله.
+
+القاعدة في كل المستويات: اللي تقدر تسويه، سوّه. لا تطلب من المستخدم يشغل أوامر.
+
+**اختر المسار:**
+
+| المستخدم طلب | المسار | الوقت |
+|---|---|---|
+| موشن جرافك، نصوص متحركة، إنفوجرافيك، إعلان بسيط، أو ما حدد وهذا أول مقطع له | السريع، الخطوة 1.5 | دقايق |
+| ثلاثي الأبعاد، Blender، تفكيك أو زوم داخل شيء حقيقي | Blender، من الخطوة 2 | ساعات |
 
 ## 1. وش عندك في الجلسة السحابية
 
-قِس، لا تفترض: `nproc; free -g; df -h .; python3 --version; which ffmpeg node`.
+قِس، لا تفترض: `bash $SK/scripts/doctor.sh`.
 
 اللي لقيناه: ٤ أنوية CPU، و١٥ جيجا رام، وبدون كرت شاشة، وPython 3.13، وffmpeg، وNode، وChromium مع Playwright جاهزين. حزم pip وnpm تنزل عادي، وخطوط Google Fonts توصل. **Blender مو موجود**، والحل تحت.
 
@@ -38,8 +47,40 @@ SK=$(dirname "$(ls -d ~/.claude/skills/ipad_code/SKILL.md .claude/skills/ipad_co
 | مكتبة مؤثرات صوتية | صوت مولّد بالكود: هدير، وwhoosh يتبع الزوم، وصدمات، ولمعات، ولحظة «تشغيل» | `sound.py` |
 | Premiere (تجميع وتصدير) | ffmpeg: إطارات، ونصوص بتلاشي، وصوت بمستوى ‎-14 LUFS، وH.264 | `assemble.py` |
 | جهاز رندر قوي | مزرعة رندر: جلسات سحابية متوازية، كل وحدة ٤ أنوية | `farm.py` + [references/farm.md](references/farm.md) |
-| صوت راوي وموسيقى | ElevenLabs عن طريق الـ MCP (شوف سكل `نبرة`). تنزيل الملف يحتاج السماح للـ host، والتفاصيل في [references/pitfalls.md](references/pitfalls.md) | |
+| صوت راوي وموسيقى (اختياري) | ElevenLabs عن طريق الـ MCP إذا كان مربوط عند المستخدم. سكل `نبرة` مو جزء من هذي السكل، فإذا ما كانت موجودة كمّل بدونها، أو استخدم `sound.py`. تنزيل الملف يحتاج السماح للـ host، والتفاصيل في [references/pitfalls.md](references/pitfalls.md) | |
 | تسليم الملف | `SendUserFile` يطلع بطاقة في التطبيق، ومنها يحفظ المستخدم الفيديو في الصور | |
+| موشن جرافك (After Effects) | صفحة HTML كل شيء فيها يتحسب من الوقت، وChromium يصورها إطار إطار | `motion.js` |
+
+## 1.5 المسار السريع: موشن جرافك بالكود
+
+بدون Blender وبدون انتظار طويل. مناسب لأول مقطع.
+
+```bash
+export NODE_PATH=$(npm root -g)
+node -e "require('playwright').chromium.launch().then(b=>b.close()).catch(()=>process.exit(1))" 2>/dev/null || { npm i -g playwright && "$NODE_PATH/playwright/cli.js" install chromium; }
+P=<مجلد المشروع داخل scratchpad>; mkdir -p $P
+cp $SK/assets/examples/motion/comp.html $SK/assets/examples/motion/sound.json $P/
+python3 -m venv ~/.snd-venv && ~/.snd-venv/bin/pip install -q numpy
+```
+
+1. عدّل `$P/comp.html`: النصوص في `BEATS`، والألوان في `COLORS`، وصمم الرسم في `drawField` و`drawRing` على فكرة المقطع. لا تخلّ كل مقطع نسخة من القالب، فالقالب نقطة بداية.
+2. كل شيء لازم يكون دالة في `t` داخل `seek(t)`: بدون CSS animations وبدون مؤقتات وبدون `Math.random` بلا بذرة.
+3. النص داخل x200–880 وy270–1400 للمقاطع العمودية، عشان أزرار الريلز وتيك توك ما تغطيه.
+4. **معاينة (بوابة):**
+   ```bash
+   NODE_PATH=$(npm root -g) node $SK/scripts/motion.js $P/comp.html $P/preview --fps 30 --seconds 8 --step 40
+   bash $SK/scripts/contact.sh $P/contact.png $P/preview/f_*.png
+   ```
+   اقرأ `contact.png` بنفسك، صلّح اللي تشوفه، وأرسله للمستخدم. لا تكمل قبل موافقته.
+5. **الرندر والصوت والتجميع:**
+   ```bash
+   NODE_PATH=$(npm root -g) node $SK/scripts/motion.js $P/comp.html $P/frames --fps 30 --seconds 8
+   ~/.snd-venv/bin/python $SK/scripts/sound.py $P/sound.json $P/sound.wav
+   python3 $SK/scripts/assemble.py --frames $P/frames --fps 30 --audio $P/sound.wav --out $P/final.mp4
+   bash $SK/scripts/contact.sh $P/check.png $P/final.mp4 1 3.5 6
+   ```
+   وقّت `sound.json` على بدايات `BEATS`. وإذا غيرت المدة، غيّر `DURATION` و`duration` و`--seconds` مع بعض.
+6. سلّم حسب الخطوة 8.
 
 ## 2. ابنِ المشروع
 
@@ -89,11 +130,12 @@ bash $SK/scripts/contact.sh $P/contact.png $P/preview/f_*.png
 
 ## 6. مزرعة الرندر (أجهزة كثيرة)
 
-الخطوات بالتفصيل في [references/farm.md](references/farm.md). باختصار:
+الخطوات بالتفصيل في [references/farm.md](references/farm.md). تحتاج مستودع وأدوات إدارة الجلسات (`create_session` وأخواتها). إذا ما كانت عندك، قل للمستخدم إن المزرعة مو متوفرة في جلسته، وارندر على جهاز واحد بالدفعات، أو اقترح جودة أقل. باختصار:
 
+0. `python3 $SK/scripts/farm.py precheck --blend $P/scene.blend`، وإذا طلع `TOO BIG` خفف المشهد قبل الرفع. وإذا المستودع عام، استأذن المستخدم، لأن الإطارات بتصير ظاهرة للكل.
 1. ارفع `scene.blend` و`render.py` و`setup_blender.sh` على فرع وظيفة (orphan) اسمه `render-job`.
 2. `python3 $SK/scripts/farm.py plan --frames 1-240 --have $P/frames --workers N` يوزّع الإطارات الناقصة بالتناوب، عشان الإطارات الثقيلة تنقسم بالتساوي.
-3. لكل جهاز: `create_session` على المستودع، و`source_revision: render-job`، و`outcome_branch: render-out-wNN`، والـ prompt من `farm.py prompt`.
+3. لكل جهاز: `create_session` على المستودع، و`source_revision: render-job`، و`outcome_branch: render-out-wNN`، والـ prompt من `farm.py prompt --samples <نفس قيمة الرندر النهائي>`، لأن ملف المشهد ممكن يكون محفوظ بقيمة أعلى بكثير.
 4. الجلسة اللي تخلص ما ترجع تبلغك. جدول لنفسك فحص بـ `send_later` بعد ٢٥ إلى ٣٠ دقيقة، وشيّك بـ `get_session` وبـ `farm.py collect`.
 5. أي جهاز وقف بدون ما يرفع شي: أرسل له `send_message` يكمّل. وفي نفس الوقت ارندر إطاراته الناقصة هنا من الآخر للأول، واللي يخلص أول تاخذ منه.
 6. بعد ما تكتمل الإطارات، أرشف الجلسات بـ `archive_session`. وقل للمستخدم يحذف فروع `render-job` و`render-out-w*` من صفحة Branches في GitHub، لأن الجلسة ما تقدر تحذف فروع.
@@ -108,7 +150,7 @@ bash $SK/scripts/contact.sh $P/check.png $P/final.mp4 1 3.5 6 9
 ```
 
 - أمثلة جاهزة: [cards.json](assets/examples/transistor/cards.json) و[sound.json](assets/examples/transistor/sound.json). وقّت النص والصوت على أحداث المشهد نفسها (الثانية = رقم الإطار ÷ fps).
-- النص: ٥ كلمات كحد أقصى للسطر، وتحت ثلث الشاشة (`bottom: 430`) عشان ما تغطيه أزرار الريلز. تأكد إن السكربت يطبع `(Cairo)` وما يطبع `FONT NOT LOADED`.
+- النص: ٥ كلمات كحد أقصى للسطر، وداخل x200–880 وy270–1400 عشان ما تغطيه أزرار الريلز. `text_cards.js` يصغّر النص الكبير ليناسب، ويفشل إذا طلع `FONT NOT LOADED` أو `OUTSIDE SAFE AREA`، فصلّح السبب ولا تتجاهله.
 - **أنت ما تسمع.** تأكد من الصوت بالأرقام: `ffmpeg -i sound.wav -af ebur128=peak=true -f null -`، وبالطيف: `showspectrumpic`. وقل للمستخدم وين يركز وهو يسمع.
 - **تحقق قبل التسليم:** اقرأ `check.png` وتأكد إن النصوص ظاهرة في كل لقطة.
 - `assemble.py --upto N` يطلّع مسودة من الإطارات الجاهزة. أرسلها للمستخدم وأنت تنتظر الرندر.

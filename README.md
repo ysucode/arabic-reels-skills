@@ -19,7 +19,9 @@
 cp -r skills/رواية skills/انمي skills/نبرة skills/ipad_code ~/.claude/skills/
 ```
 
-على الآيباد (جلسات سحابية بدون `~/.claude` دائم): حط السكل داخل مستودع مشروعك في `.claude/skills/ipad_code/`، وكل جلسة على المستودع بتشوفه. تقدر تطلب من Claude ينسخه لك.
+على الآيباد أو لأي شخص جديد: افتح جلسة Claude Code على مشروعك وأرسل هذي الجملة، وClaude يكمل الباقي:
+
+> نزّل هذا الملف بـ curl واقرأه كامل، ثم نفذ اللي فيه خطوة خطوة: https://raw.githubusercontent.com/ysucode/arabic-reels-skills/main/skills/ipad_code/START.md
 
 ## المتطلبات
 

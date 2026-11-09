@@ -1,5 +1,5 @@
 {
-  "width": 1080, "height": 1920, "font": "Cairo", "bottom": 430,
+  "width": 1080, "height": 1920, "font": "Cairo", "bottom": 520,
   "cards": [
     {"id": "t1", "small": "داخل كل معالج", "start": 0.3, "end": 2.3},
     {"id": "t2", "small": "مليارات الترانزستورات", "start": 2.8, "end": 4.8},

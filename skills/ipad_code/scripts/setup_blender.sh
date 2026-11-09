@@ -12,7 +12,10 @@ if ! $PY -c 'import sys; sys.exit(0 if sys.version_info[:2] == (3, 13) else 1)';
 fi
 [ -x "$V/bin/python" ] || $PY -m venv "$V"
 if ! "$V/bin/python" -c "import bpy" 2>/dev/null; then
-  "$V/bin/pip" install -q --disable-pip-version-check "bpy${VER:+==$VER}"
+  "$V/bin/pip" install -q --disable-pip-version-check "bpy${VER:+==$VER}" || {
+    echo "BLENDER INSTALL FAILED: no bpy ${VER:-build} for $($PY --version). Use the fast motion path, or install the Python version bpy needs." >&2
+    exit 1
+  }
 fi
 "$V/bin/python" - <<'EOF'
 import bpy, os

@@ -21,6 +21,7 @@
 | `git rm -rq .` فشل في الفرع الـ orphan، والفرع انرفع ومعه كل ملفات المستودع وبدون المشهد | `git rm -rqf .` ثم `git ls-tree -l HEAD` قبل ما تفتح الأجهزة |
 | `scene.blend` ما دخل الـ commit | `.gitignore` ممكن يتجاهله، فاستخدم `git add -f` |
 | حذف الفروع المؤقتة رجع 403 | صلاحية الجلسة ما تشمل الحذف. المستخدم يحذفها من GitHub |
+| أجهزة المزرعة أبطأ من الحساب بكثير وإطاراتها مختلفة | ملف المشهد محفوظ بعينات أعلى. مرّر `--samples` لـ `farm.py prompt` |
 | جهاز في المزرعة أنهى دوره بدون ما يرندر | `send_message` يكمّل، وفي نفس الوقت ارندر إطاراته هنا (شوف farm.md) |
 | ما وصلك خبر إن الأجهزة خلصت | الجلسات الناجحة ما ترجع تبلغ، فجدول `send_later` |
 
@@ -30,7 +31,9 @@
 |---|---|
 | تنزيل ملف ElevenLabs (`elevenlabsusercontent.com`) رجع 403 من البروكسي | هذا host مو مسموح في شبكة البيئة. إذا تحتاج الملف داخل الفيديو: `get_environment` ثم `update_environment` بـ `add_allowed_hosts: ["elevenlabsusercontent.com"]` (يطلع للمستخدم طلب موافقة). وإذا رفض أو ما تحتاجه: `sound.py` يطلع تصميم صوت كامل بدون أي تنزيل |
 | النصوص ما طلعت في الفيديو النهائي | فلتر `loop=1` في ffmpeg يكرر الصورة مرة وحدة بس. `assemble.py` يستخدم `-loop 1 -t <المدة>` على المدخل. ودايماً سوّ `contact.sh` على الفيديو النهائي وشوف النص بعينك |
-| الخط العربي طلع بخط احتياطي | `text_cards.js` يطبع `FONT NOT LOADED`. تأكد إن `fonts.googleapis.com` يوصل |
+| الخط العربي طلع بخط احتياطي | `text_cards.js` و`motion.js` يوقفون ويطبعون `FONT NOT LOADED`. تأكد إن `fonts.googleapis.com` يوصل |
+| النص طلع تحت أزرار الريلز | خلّه داخل x200–880 وy270–1400. `text_cards.js` يفشل بـ `OUTSIDE SAFE AREA` إذا طلع عنها |
+| `Cannot find module 'playwright'` أو `Executable doesn't exist` | المكتبة ناقصة، أو نسختها ما تطابق المتصفح المركب: `npm i -g playwright && "$(npm root -g)/playwright/cli.js" install chromium`، وتأكد من `NODE_PATH=$(npm root -g)` |
 | ما تقدر تسمع الصوت | قِس: `ebur128` للمستوى، و`showspectrumpic` للطيف. وقل للمستخدم وين يركز |
 | طنين الـ hum خشن | الموجة المربعة تطلع هارمونيات لين 20kHz، فخلّ نسبتها صغيرة (0.02) |
 

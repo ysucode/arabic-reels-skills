@@ -1,0 +1,95 @@
+<!doctype html>
+<!-- Template for the fast motion-graphics path. Edit BEATS, COLORS and draw() per video.
+     Rule: everything is a pure function of t inside seek(t). All text stays inside x200-880, y270-1400. -->
+<html lang="ar" dir="rtl" data-font="Cairo">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;900&display=block" rel="stylesheet">
+<style>
+  html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #0b0d12; }
+  canvas { position: absolute; inset: 0; }
+  #text { position: absolute; left: 200px; width: 680px; top: 270px; height: 1130px;
+          display: flex; align-items: center; justify-content: center; }
+  .beat { position: absolute; text-align: center; font-family: 'Cairo', sans-serif; color: #f4f1ea; }
+  .small { font-size: 62px; font-weight: 600; line-height: 1.4; }
+  .big { font-size: 118px; font-weight: 900; line-height: 1.2; }
+  .word { display: inline-block; will-change: transform, opacity; margin: 0 10px; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<div id="text"></div>
+<script>
+const DURATION = 8;
+const COLORS = { bg: '#0b0d12', dot: [122, 134, 158], accent: [255, 176, 46] };
+const BEATS = [
+  { start: 0.25, end: 2.45, small: 'هذا المقطع', big: 'ما انصوّر' },
+  { start: 2.7,  end: 5.05, small: 'ولا انرسم', big: 'بالإيد' },
+  { start: 5.3,  end: 7.9,  small: 'كله انكتب', big: 'بالكود' },
+];
+
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const outExpo = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x);
+const inCubic = x => x * x * x;
+const backOut = x => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+
+const root = document.getElementById('text');
+const lines = BEATS.map(b => {
+  const el = document.createElement('div'); el.className = 'beat';
+  const mk = (txt, cls) => {
+    const row = document.createElement('div'); row.className = cls;
+    return { row, words: txt.split(' ').map(w => { const s = document.createElement('span'); s.className = 'word'; s.textContent = w; row.appendChild(s); return s; }) };
+  };
+  const a = mk(b.small, 'small'), c = mk(b.big, 'big');
+  el.append(a.row, c.row); root.appendChild(el);
+  return { el, words: [...a.words, ...c.words] };
+});
+
+function drawField(t) {
+  g.fillStyle = COLORS.bg; g.fillRect(0, 0, 1080, 1920);
+  const cx = 540, cy = 835;
+  // Each beat sends one ripple out from the centre of the text.
+  const hits = BEATS.map(b => t - b.start).filter(d => d > 0 && d < 2);
+  for (let y = 30; y < 1920; y += 60) for (let x = 30; x < 1080; x += 60) {
+    const d = Math.hypot(x - cx, y - cy);
+    let w = 0;
+    for (const h of hits) { const r = outExpo(h / 1.6) * 1250; w += Math.exp(-Math.pow((d - r) / 95, 2)) * (1 - h / 2); }
+    const idle = .5 + .5 * Math.sin(d * .012 - t * 1.3);
+    const dx = d ? (x - cx) / d : 0, dy = d ? (y - cy) / d : 0;
+    const k = clamp(w);
+    const c = COLORS.dot.map((v, i) => Math.round(v + (COLORS.accent[i] - v) * k));
+    g.fillStyle = `rgba(${c},${.32 + .3 * idle + .38 * k})`;
+    g.beginPath(); g.arc(x + dx * w * 22, y + dy * w * 22, 3.6 + 6 * k, 0, 7); g.fill();
+  }
+}
+
+function drawRing(t) {
+  const b = BEATS.find(x => t >= x.start - .15 && t < x.end + .2); if (!b) return;
+  const inn = outExpo(clamp((t - b.start + .15) / .7)), out = inCubic(clamp((t - b.end + .25) / .45));
+  g.strokeStyle = `rgba(${COLORS.accent},${(1 - out) * .95})`;
+  g.lineWidth = 7 * (1 - out) + 1; g.lineCap = 'round';
+  const r = 330 * inn + 240 * out, a0 = -Math.PI / 2 + t * .7;
+  g.beginPath(); g.arc(540, 835, r, a0, a0 + Math.PI * 2 * inn * .82); g.stroke();
+}
+
+window.seek = function (t) {
+  drawField(t); drawRing(t);
+  BEATS.forEach((b, i) => {
+    const L = lines[i], on = t >= b.start - .05 && t < b.end + .4;
+    L.el.style.visibility = on ? 'visible' : 'hidden';
+    if (!on) return;
+    const exit = inCubic(clamp((t - b.end) / .32));
+    L.words.forEach((w, k) => {
+      const p = clamp((t - b.start - k * .1) / .5), s = backOut(p);
+      w.style.opacity = clamp(p * 3) * (1 - exit);
+      w.style.transform = `translateY(${(1 - s) * 70 - exit * 60}px) scale(${.92 + .08 * s})`;
+    });
+  });
+  // Fade to the background over the last 0.25 s.
+  const f = clamp((t - (DURATION - .25)) / .25);
+  document.body.style.opacity = 1 - f;
+};
+</script>
+</body>
+</html>
