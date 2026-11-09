@@ -45,7 +45,7 @@ GitHub مثل درج لملفاتك على الإنترنت، وClaude يشتغ�
 
 ### الخطوة 3: انسخ هالجملة وأرسلها
 
-> نزّل هذا الملف بـ curl واقرأه كامل، ثم نفذ اللي فيه خطوة خطوة: https://raw.githubusercontent.com/ysucode/arabic-reels-skills/main/skills/ipad_code/START.md
+> من مستودع ysucode/arabic-reels-skills في GitHub، فرع main، نزّل بـ curl من raw.githubusercontent.com الملف skills/ipad_code/START.md واقرأه كامل، ثم نفذ اللي فيه خطوة خطوة.
 
 الباقي على Claude: يسألك عن مستواك وكم تبي شرح، ويركب كل شيء بنفسه، ويطلّع لك أول مقطع.
 

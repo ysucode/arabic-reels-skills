@@ -21,7 +21,7 @@ cp -r skills/رواية skills/انمي skills/نبرة skills/ipad_code ~/.clau
 
 على الآيباد أو لأي شخص جديد: افتح جلسة Claude Code على مشروعك وأرسل هذي الجملة، وClaude يكمل الباقي:
 
-> نزّل هذا الملف بـ curl واقرأه كامل، ثم نفذ اللي فيه خطوة خطوة: https://raw.githubusercontent.com/ysucode/arabic-reels-skills/main/skills/ipad_code/START.md
+> من مستودع ysucode/arabic-reels-skills في GitHub، فرع main، نزّل بـ curl من raw.githubusercontent.com الملف skills/ipad_code/START.md واقرأه كامل، ثم نفذ اللي فيه خطوة خطوة.
 
 ## المتطلبات
 

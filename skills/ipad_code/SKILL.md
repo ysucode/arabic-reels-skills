@@ -47,7 +47,7 @@ SK=$(dirname "$SKILL_MD")
 | مكتبة مؤثرات صوتية | صوت مولّد بالكود: هدير، وwhoosh يتبع الزوم، وصدمات، ولمعات، ولحظة «تشغيل» | `sound.py` |
 | Premiere (تجميع وتصدير) | ffmpeg: إطارات، ونصوص بتلاشي، وصوت بمستوى ‎-14 LUFS، وH.264 | `assemble.py` |
 | جهاز رندر قوي | مزرعة رندر: جلسات سحابية متوازية، كل وحدة ٤ أنوية | `farm.py` + [references/farm.md](references/farm.md) |
-| صوت راوي وموسيقى (اختياري) | ElevenLabs عن طريق الـ MCP إذا كان مربوط عند المستخدم. سكل `نبرة` مو جزء من هذي السكل، فإذا ما كانت موجودة كمّل بدونها، أو استخدم `sound.py`. تنزيل الملف يحتاج السماح للـ host، والتفاصيل في [references/pitfalls.md](references/pitfalls.md) | |
+| صوت راوي وموسيقى | ElevenLabs عن طريق الـ MCP، واقترحه مع كل مقطع (الخطوة 1.6). سكل `نبرة` مو جزء من هذي السكل، فإذا ما كانت موجودة كمّل بدونها | |
 | تسليم الملف | `SendUserFile` يطلع بطاقة في التطبيق، ومنها يحفظ المستخدم الفيديو في الصور | |
 | موشن جرافك (After Effects) | صفحة HTML كل شيء فيها يتحسب من الوقت، وChromium يصورها إطار إطار | `motion.js` |
 
@@ -60,7 +60,7 @@ export NODE_PATH=$(npm root -g)
 node -e "require('playwright').chromium.launch().then(b=>b.close()).catch(()=>process.exit(1))" 2>/dev/null || { npm i -g playwright && "$NODE_PATH/playwright/cli.js" install chromium; }
 P=<مجلد المشروع داخل scratchpad>; mkdir -p $P
 cp $SK/assets/examples/motion/comp.html $SK/assets/examples/motion/sound.json $P/
-python3 -m venv ~/.snd-venv && ~/.snd-venv/bin/pip install -q numpy
+~/.snd-venv/bin/python -c "import numpy" 2>/dev/null || { python3 -m venv ~/.snd-venv && ~/.snd-venv/bin/pip install -q numpy; }
 ```
 
 1. عدّل `$P/comp.html`: النصوص في `BEATS`، والألوان في `COLORS`، وصمم الرسم في `drawField` و`drawRing` على فكرة المقطع. لا تخلّ كل مقطع نسخة من القالب، فالقالب نقطة بداية.
@@ -79,8 +79,26 @@ python3 -m venv ~/.snd-venv && ~/.snd-venv/bin/pip install -q numpy
    python3 $SK/scripts/assemble.py --frames $P/frames --fps 30 --audio $P/sound.wav --out $P/final.mp4
    bash $SK/scripts/contact.sh $P/check.png $P/final.mp4 1 3.5 6
    ```
-   وقّت `sound.json` على بدايات `BEATS`. وإذا غيرت المدة، غيّر `DURATION` و`duration` و`--seconds` مع بعض.
+   وقّت `sound.json` على بدايات `BEATS`. صيغة كل حقل مكتوبة في أول `sound.py`، فاقرأها قبل التعديل (مثلاً `glints` ثلاثة أرقام: `[بداية, نهاية, عدد]`). وإذا غيرت المدة، غيّر `DURATION` و`duration` و`--seconds` مع بعض.
 6. سلّم حسب الخطوة 8.
+
+## 1.6 الراوي
+
+اقترحه مع كل مقطع، إلا إذا المستخدم قال ما يبيه.
+
+- **ElevenLabs مو مربوط:** قل له يقدر يربطه من إعدادات Claude وإن هذا يحتاج حساب عندهم، وكمّل المقطع بالمؤثرات لين يربطه. لا تطلب منه مفتاح API في المحادثة.
+- **قبل التوليد:** قل له إنه يخصم من رصيده، واخذ موافقته. إذا طلعت أكثر من نسخة، استخدم الأولى إلا إذا طلب غيرها.
+- **الصوت الافتراضي:** `nhJWWCFdNdusuVUT3x19`، إلا إذا طلب صوت ثاني. وإذا ما اشتغل من حسابه، اختر صوت قريب من لهجته وقل له أي صوت اخترت.
+- **تنزيل الملف:** لو رجع 403، استخدم `get_environment` ثم `update_environment` بـ `add_allowed_hosts: ["elevenlabsusercontent.com"]`، وبيطلع له طلب موافقة.
+- **التوقيت:** قِس طول الصوت بـ `ffprobe`، وخل `DURATION` و`duration` و`--seconds` أطول منه بنص ثانية على الأقل، وطابق `BEATS` مع بداية كل جملة (`silencedetect` يعطيك الفواصل).
+
+ادمج الراوي فوق المؤثرات قبل `assemble.py`:
+
+```bash
+ffmpeg -y -i $P/sound.wav -i $P/voice.mp3 -filter_complex "[0:a]volume=0.35[bed];[bed][1:a]amix=inputs=2:duration=first:normalize=0[out]" -map "[out]" -ar 48000 $P/mix.wav
+```
+
+ثم مرّر `--audio $P/mix.wav` بدل `sound.wav`.
 
 ## 2. ابنِ المشروع
 
